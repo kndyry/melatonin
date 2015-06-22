@@ -13,6 +13,7 @@
 # Created: 18-Jun-2015
 
 use LWP;
+use Mozilla::CA;
 use HTTP::Request::Common;
 use Term::ANSIColor qw(:constants);
    $Term::ANSIColor::AUTORESET = 1;
@@ -47,14 +48,14 @@ EOS
 sub main {
   my ($method, $url, $content) = @ARGV;
 
-  $method  ||= 0;
-  $url     ||= 0;
-  $content ||= 0;
+  $method  ||=  0;
+  $url     ||=  0;
+  $content ||= '';
 
   die $help_text
-    if ($method eq 0 || $url eq 0 || $content eq 0);
+    if ($method eq 0 || $url eq 0);
 
-  if (index($content, '=') < 0) {
+  if ($content && index($content, '=') < 0) {
     local $/ = undef; # Slurp the whole file.
     open (my $file, "<", $content)
       or die "Can't open $content: $!";
@@ -69,12 +70,19 @@ sub main {
   # Display request
   print "\n method:   ", CYAN  $request->method();
   print "\n url:      ", BLUE  $request->url();
-  print "\n data:     ", WHITE $request->content();
+  print "\n data:     ", WHITE $request->content()
+    if ($request->content());
 
-  # Assuming a JSON response, format it.
+  # Format JSON responses
   $response =~ s/{/{\n  /g;
   $response =~ s/,/,\n  /g;
   $response =~ s/}/\n } /g;
+
+  # Format XML responses
+  $response =~ s/<(?!\/|\?)/\n </g;
+
+  # Format PHP responses
+  $response =~ s/;(?!\Z)/;\n  /g;
 
   # Display response
   print BOLD  "\n\n Response";
