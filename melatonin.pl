@@ -14,7 +14,7 @@
 
 use LWP;
 use Mozilla::CA;
-use HTTP::Request::Common;
+use HTTP::Request::Common qw(GET HEAD POST PUT DELETE);
 use Term::ANSIColor qw(:constants);
    $Term::ANSIColor::AUTORESET = 1;
 
@@ -23,7 +23,7 @@ my $help_text = <<EOS
    'perl melatonin.pl method url data output'
 
  where:
-   method = an HTTP verb; i.e. GET, POST, PUT
+   method = an HTTP verb; GET, HEAD, POST, PUT, DELETE
    url    = where to send the request
    data   = optional; inline data or a filename
    output = optional; data output format
