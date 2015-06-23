@@ -4,7 +4,7 @@
       'perl melatonin.pl method url data output'
 
     where:
-      method = an HTTP verb; i.e. GET, POST, PUT
+      method = an HTTP verb; GET, HEAD, POST, PUT, DELETE
       url    = where to send the request
       data   = optional; inline data or a filename
       output = optional; data output format
